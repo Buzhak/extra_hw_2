@@ -27,7 +27,6 @@ for file in reports:
     print(report.name)
 """
 def file_data(file_name):
-    
     file_date = datetime.strptime(file_name, '%d%m%Y')
     return file_date.strftime('%d %m %Y')
 
@@ -37,8 +36,6 @@ def weight_to_float(item):
     item = float(item.replace(',', '.'))
     return item
     
-
-
 def process_data() -> None:
     reports = Path('./data').glob('*.csv')
     for file in reports:
@@ -50,19 +47,21 @@ def process_data() -> None:
         
         with open ('./data/'+file.name, 'r', encoding='utf-8') as file:
 
-            titles = file.readline() 
-            titles = titles.replace('\n', '')
-            titles = titles.split(',')
-            
-            
-            if len(titles) == 5:
-
-                fields = [titles[0],titles[1],titles[2],titles[3],titles[4]]
-            else:
-                fields = [titles[0],titles[1],titles[2],titles[3]]
+            reader = csv.DictReader(file, delimiter = ',')
             
 
-            reader = csv.DictReader(file, fields, delimiter = ',')
+            # titles = file.readline() 
+            # titles = titles.replace('\n', '')
+            # titles = titles.split(',')
+            
+            
+            # if len(titles) == 5:
+            #     fields = [titles[0],titles[1],titles[2],titles[3],titles[4]]
+            # else:
+            #     fields = [titles[0],titles[1],titles[2],titles[3]]
+            
+
+            # reader = csv.DictReader(file, fields, delimiter = ',')
             reader = sorted(reader, key = weight_to_float, reverse = True)
             print('Топ 10 самых крупных компонентов фонда:')
             for row in range(1, 11):
@@ -76,12 +75,5 @@ def process_data() -> None:
             print(f"Фаил заполнен на {round(sum_weight, 2)}%")
             print()
         
-
-        
-        
-    
-
-
-
 if __name__ == '__main__':
     process_data()
